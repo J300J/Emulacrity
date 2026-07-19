@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "emulacrity"
+version = "0.1.0"
+description = "CTI-driven scoring tool for evaluating threat actors as purple team emulation candidates."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "anthropic>=0.90.0",
+    "typer>=0.15.0",
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+    "rich>=13.7",
+    "reportlab>=4.0",
+    "pypdf>=4.0",
+]
+
+[project.scripts]
+emulacrity = "emulacrity.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/emulacrity"]
