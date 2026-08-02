@@ -7,6 +7,7 @@ from typing import Optional, Sequence, Union
 
 import anthropic
 
+from emulacrity.attack_stix import format_group_context, lookup_group
 from emulacrity.config import Config
 from emulacrity.preflight import check_local_sources
 from emulacrity.prompts import build_system_prompt, build_user_message
@@ -39,6 +40,7 @@ def _build_user_content(
     actor: str,
     sources: Optional[list[str]],
     defensive_priority_context: Optional[str] = None,
+    attack_stix_context: Optional[str] = None,
 ) -> list[dict]:
     if mode == "discovery":
         content = [{"type": "text", "text": build_user_message(mode, actor)}]
@@ -84,6 +86,18 @@ def _build_user_content(
             }
         )
 
+    if attack_stix_context:
+        content.append(
+            {
+                "type": "text",
+                "text": (
+                    "--- MITRE ATT&CK STRUCTURED PROFILE (Pillar 1 & 4 grounding) ---\n"
+                    f"{attack_stix_context}\n"
+                    "--- END MITRE ATT&CK STRUCTURED PROFILE ---"
+                ),
+            }
+        )
+
     return content
 
 
@@ -117,9 +131,15 @@ def evaluate_actor(
 
     client = client or anthropic.Anthropic()
 
+    attack_stix_context = None
+    if config.attack_stix_enabled:
+        profile = lookup_group(actor)
+        if profile is not None:
+            attack_stix_context = format_group_context(profile)
+
     system_prompt = build_system_prompt(config)
     user_content = _build_user_content(
-        mode, actor, sources or None, defensive_priority_context
+        mode, actor, sources or None, defensive_priority_context, attack_stix_context
     )
     messages = [{"role": "user", "content": user_content}]
 

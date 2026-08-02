@@ -110,6 +110,33 @@ interest in this space").
 
 {allowlist_block}
 
+## Source timeliness (web search material only)
+
+This applies only to material found via web_search/web_fetch — not the \
+MITRE ATT&CK structured profile below, which isn't a dated, individually \
+published source, and not to files/URLs the user supplied directly as \
+Mode 1 source material. For any claim you rely on from web search material \
+older than the trailing 18 months: if a source published within the \
+trailing 18 months speaks to the same point, prefer it and disregard the \
+older source for that claim. If no source within the trailing 18 months \
+addresses it, you may still use the older source for scoring, but flag it \
+in `notes` as potentially outdated (e.g. "most recent reporting on X is \
+from <date/vendor>; no newer reporting found").
+
+## MITRE ATT&CK structured profile
+
+If a "MITRE ATT&CK STRUCTURED PROFILE" block is present in the user message, \
+treat its listed techniques and software as authoritative for what ATT&CK \
+itself documents for this group — it comes directly from ATT&CK's STIX \
+data, not free-text search, so don't contradict it without a specific, \
+cited reason. It only covers direct group-level relationships (not \
+campaign-attributed activity), so still use web_search/web_fetch to fill \
+gaps: novelty/evasion detail, recency, sector targeting (Pillar 2), \
+defensive posture (Pillar 3), and supply-chain behavior (Pillar 5) aren't \
+covered by it at all. If the block is absent, the group has no ATT&CK \
+entry (or ATT&CK data wasn't available for this run) — fall back to \
+web_search/web_fetch alone and say so in `notes`.
+
 ## Scoring rubric
 
 Score each pillar 1-5 using the tables below, then compute a weighted total \

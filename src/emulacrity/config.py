@@ -40,6 +40,7 @@ class Config(BaseModel):
     defensive_priority_source: Literal["guided_prompts", "freeform", "adapter"] = (
         "guided_prompts"
     )
+    attack_stix_enabled: bool = True
     trusted_source_allowlist: list[str] = Field(
         default_factory=lambda: list(DEFAULT_TRUSTED_SOURCES)
     )

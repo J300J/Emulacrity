@@ -95,12 +95,18 @@ def evaluate(
         "--no-interactive",
         help="Skip interactive guided-prompt questions (Pillar 3 defaults to neutral).",
     ),
+    no_attack_stix: bool = typer.Option(
+        False,
+        "--no-attack-stix",
+        help="Skip the MITRE ATT&CK structured lookup (Pillar 1 & 4 grounding) for this run.",
+    ),
 ) -> None:
     """Score a single threat actor against the Emulacrity rubric."""
     overrides = {
         "target_sector": sector,
         "lab_internet_access": internet_access,
         "lab_supported_platforms": platforms or None,
+        "attack_stix_enabled": False if no_attack_stix else None,
     }
 
     try:
