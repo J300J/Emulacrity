@@ -11,7 +11,7 @@ Full spec: [`Emulacrity.md`](./Emulacrity.md).
 pip install -e .
 ```
 
-Requires an `ANTHROPIC_API_KEY` in the environment (or an `ant auth login` profile).
+Requires an `ANTHROPIC_API_KEY` in the environment.
 
 ## Usage
 
@@ -33,6 +33,13 @@ emulacrity evaluate "APT34" \
 emulacrity evaluate "APT34" \
   --platforms windows_endpoint --platforms cloud \
   --weight technical=0.40 --weight sector=0.20
+
+# Override the lab's internet access mode, write JSON to a file, and use a
+# specific config file instead of the default resolution order
+emulacrity evaluate "APT34" \
+  --internet-access air_gapped \
+  --config ./emulacrity.yaml \
+  --output ./apt34-eval.json
 
 # Config
 emulacrity config init          # write emulacrity.yaml with defaults

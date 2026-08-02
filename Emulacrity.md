@@ -130,11 +130,11 @@ evaluation time, in order of preference:
 2. **Freeform paste/import.** The user can paste unstructured context — a ticketing
    export, a Slack thread, SOC meeting notes — and the model extracts signal from it
    the same way Mode 1 handles a source document.
-3. **`defensive_priority_source` adapter (optional, stretch goal).** See the
-   Configurable Parameters section — a documented plugin interface for users who want
-   to wire up their own internal CTI/ticketing system. Not built in v1; the schema is
-   published so users can implement their own adapter without exposing anything about
-   the tool's core logic.
+3. **`defensive_priority_source` adapter.** See the Configurable Parameters section —
+   a documented plugin interface for users who want to wire up their own internal
+   CTI/ticketing system. The tool matches an actor by name against a user-supplied
+   JSON export; nothing about the source system itself is part of the open-source
+   tool.
 
 | Score | Descriptor | Definition |
 |---|---|---|
@@ -267,9 +267,9 @@ These replace the hardcoded, org-specific values from the internal version:
     ```json
     [{"actor": "string", "alert_count_90d": 0, "last_seen": "YYYY-MM-DD", "active_hunt": true, "notes": "string"}]
     ```
-    This is a documented interface only — no adapter is built in v1. Users wire up
-    their own internal CTI/ticketing system to produce this JSON; nothing about the
-    source system is part of the open-source tool.
+    The tool matches an actor entry by name and passes it to the model; users wire up
+    their own internal CTI/ticketing system to produce this JSON, and nothing about
+    the source system is part of the open-source tool.
 
 The worked examples (e.g., APT34/Helix Kitten as a high sector-relevance actor) cite
 publicly documented, vendor-published threat intelligence.
