@@ -225,6 +225,16 @@ These replace the hardcoded, org-specific values from the internal version:
   applicable (e.g., "not on trusted allowlist," "vendor has a documented conflict of
   interest in this space").
 
+  **Source timeliness:** Applies only to material found via web search — not
+  structured, non-time-stamped reference data (e.g. a MITRE ATT&CK group/technique
+  lookup), and not to files/URLs the user supplies directly as Mode 1 source
+  material. For any claim the model relies on from web search material older
+  than the trailing 18 months: if a source published within the trailing 18 months
+  speaks to the same point, that newer source is preferred and the older one is
+  disregarded for that claim. If no source within the trailing 18 months addresses
+  it, the older source may still be used for scoring, but must be flagged in `notes`
+  as potentially outdated.
+
   **Maintenance:** This default list is maintained by the project and will be
   updated periodically; revisions are published via the GitHub repo rather than
   fetched at runtime.
