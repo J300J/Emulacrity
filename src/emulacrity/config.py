@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
 
 from emulacrity.allowlist import DEFAULT_TRUSTED_SOURCES
+
+DEFAULT_MODEL = "claude-sonnet-5"
+DEFAULT_MAX_TOKENS = 8000
 
 DEFAULT_PILLAR_WEIGHTS: dict[str, float] = {
     "technical_feasibility_reproducibility": 0.35,
@@ -30,8 +33,15 @@ PILLAR_SHORT_NAMES: dict[str, str] = {
 }
 
 
+class VerdictThresholds(BaseModel):
+    """Score thresholds for compute_verdict. recommended >= conditional > Not Recommended."""
+
+    recommended: float = 70.0
+    conditional: float = 50.0
+
+
 class Config(BaseModel):
-    target_sector: Optional[str] = None
+    target_sector: str | None = None
     lab_supported_platforms: list[str] = Field(default_factory=list)
     lab_internet_access: Literal["connected", "air_gapped"] = "connected"
     pillar_weights: dict[str, float] = Field(
@@ -44,6 +54,9 @@ class Config(BaseModel):
     trusted_source_allowlist: list[str] = Field(
         default_factory=lambda: list(DEFAULT_TRUSTED_SOURCES)
     )
+    model: str = DEFAULT_MODEL
+    max_tokens: int = DEFAULT_MAX_TOKENS
+    verdict_thresholds: VerdictThresholds = Field(default_factory=VerdictThresholds)
 
     @field_validator("lab_supported_platforms")
     @classmethod
@@ -151,7 +164,7 @@ def _resolve_allowlist(raw: dict) -> None:
 
 
 def load_config(
-    config_path: Optional[Path] = None, overrides: Optional[dict] = None
+    config_path: Path | None = None, overrides: dict | None = None
 ) -> Config:
     """Load and merge config: built-in defaults < config file < explicit overrides.
 

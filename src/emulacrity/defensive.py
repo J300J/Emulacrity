@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
 
 from rich.console import Console
 
@@ -34,7 +33,7 @@ GUIDED_QUESTIONS: list[str] = [
 ]
 
 
-def prompt_guided_questions(actor: str) -> Optional[str]:
+def prompt_guided_questions(actor: str) -> str | None:
     """Interactively ask the guided-prompt questions for one actor.
 
     Returns None (→ Pillar 3 defaults to neutral) if the user skips every
@@ -55,7 +54,7 @@ def prompt_guided_questions(actor: str) -> Optional[str]:
     return "\n\n".join(answers) if answers else None
 
 
-def load_freeform_context(text: Optional[str], file: Optional[Path]) -> Optional[str]:
+def load_freeform_context(text: str | None, file: Path | None) -> str | None:
     """Load freeform pasted/imported context from an inline string or a file."""
     if text and file:
         raise ValueError(
@@ -68,7 +67,7 @@ def load_freeform_context(text: Optional[str], file: Optional[Path]) -> Optional
     return text
 
 
-def load_adapter_context(path: Path, actor: str) -> Optional[str]:
+def load_adapter_context(path: Path, actor: str) -> str | None:
     """Load and match one entry from a defensive_priority_source adapter file.
 
     Expects a JSON array conforming to the documented schema:
@@ -116,10 +115,10 @@ def gather_defensive_priority_context(
     actor: str,
     source_mode: str,
     interactive: bool,
-    context_text: Optional[str],
-    context_file: Optional[Path],
-    adapter_path: Optional[Path],
-) -> Optional[str]:
+    context_text: str | None,
+    context_file: Path | None,
+    adapter_path: Path | None,
+) -> str | None:
     """Resolve Pillar 3 input for one actor.
 
     Whichever concrete input is actually supplied wins, regardless of

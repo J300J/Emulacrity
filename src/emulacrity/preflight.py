@@ -18,6 +18,7 @@ from pypdf import PdfReader
 
 MAX_REQUEST_BYTES = 32 * 1024 * 1024
 MAX_PAGES = 600
+MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024  # 2 MB per non-PDF source file
 # base64 inflates raw bytes by 4/3; PDFs go over the wire base64-encoded,
 # plain-text sources don't.
 BASE64_OVERHEAD = 4 / 3
@@ -41,6 +42,12 @@ def _inspect(path: Path) -> _SourceInfo:
 
     raw_bytes = path.stat().st_size
     if path.suffix.lower() != ".pdf":
+        if raw_bytes >= MAX_TEXT_FILE_BYTES:
+            raise PreflightError(
+                f"Text source '{path.name}' is {raw_bytes / (1024 * 1024):.1f} MB, "
+                f"which exceeds the {MAX_TEXT_FILE_BYTES // (1024 * 1024)} MB per-file "
+                "limit for text sources. Trim, split, or convert to PDF."
+            )
         return _SourceInfo(path=path, raw_bytes=raw_bytes)
 
     try:

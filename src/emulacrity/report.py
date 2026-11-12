@@ -91,8 +91,23 @@ def write_pdf(result: EvaluationResult, path: Path) -> None:
 
     if result.sources:
         story.append(Paragraph("Sources", heading_style))
-        for source in result.sources:
-            story.append(Paragraph(f"• {escape(source)}", body_style))
+        for s in result.sources:
+            label = escape(s.title or s.url or "(untitled)")
+            meta_parts = []
+            if s.publisher:
+                meta_parts.append(escape(s.publisher))
+            if s.publish_date:
+                meta_parts.append(escape(s.publish_date))
+            flags = []
+            if s.on_allowlist:
+                flags.append("trusted")
+            if s.within_18_months:
+                flags.append("recent")
+            if flags:
+                meta_parts.append(f"[{', '.join(flags)}]")
+            meta = " — ".join(meta_parts) if meta_parts else ""
+            line = f"• {label}" + (f" — {meta}" if meta else "")
+            story.append(Paragraph(line, body_style))
         story.append(Spacer(1, 0.2 * inch))
 
     story.append(Paragraph("Notes", heading_style))

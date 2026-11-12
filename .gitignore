@@ -6,4 +6,18 @@ venv/
 dist/
 build/
 .env
+
+# Emulacrity user config (may contain real sector/platform data)
 emulacrity.yaml
+emulacrity.yml
+
+# Defensive adapter exports (may contain internal telemetry data)
+*_adapter.json
+defensive_*.json
+
+# Generated reports
+*.pdf
+emulacrity_*.json
+
+# IDE
+.idea/

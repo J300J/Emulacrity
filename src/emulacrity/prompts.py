@@ -139,9 +139,9 @@ web_search/web_fetch alone and say so in `notes`.
 
 ## Scoring rubric
 
-Score each pillar 1-5 using the tables below, then compute a weighted total \
-on a 0-100 scale: for each pillar, (score / 5) * weight * 100, summed \
-across all five pillars.
+Score each pillar 1-5 using the tables below. The weighted total is computed \
+by the tool as: for each pillar, (score / 5) * weight * 100, summed across \
+all five pillars. Provide your best estimate in `weighted_total`.
 
 ### 1. Technical Feasibility & Reproducibility (weight: {weights['technical_feasibility_reproducibility']:.0%})
 
@@ -173,13 +173,28 @@ Mode: `lab_internet_access = "{config.lab_internet_access}"`
 
 ## Output
 
-Return your evaluation as a single JSON object matching the required \
-schema exactly. `verdict` should be "Recommended" for high weighted \
-totals, "Conditional" for borderline or heavily caveated cases, and "Not \
-Recommended" for low totals — or when Pillar 1 (Technical Feasibility & \
-Reproducibility) scores 1, which gates the actor regardless of other \
-pillar scores. Use `notes` for caveats, confidence, and gaps in reporting, \
-including any flagged non-allowlisted sources.
+Return your evaluation as a single JSON object matching the required schema.
+
+**sources** — for each source actually used for scoring, provide:
+- `title`: a brief descriptive title
+- `url`: the URL if one exists, otherwise ""
+- `publisher`: the vendor or organisation name (e.g. "Mandiant", "CISA")
+- `publish_date`: the publication date as "YYYY-MM-DD" if fully known, \
+"YYYY-MM" or "YYYY" if partial, or "" if unknown
+
+**weighted_total** — provide your best estimate; the tool recomputes this \
+deterministically from your pillar scores, so this value is only used as a \
+cross-check.
+
+**verdict** — "Recommended" for high totals, "Conditional" for borderline \
+or heavily caveated cases, "Not Recommended" for low totals. The tool \
+enforces the Pillar 1 gate (score = 1 → "Not Recommended") deterministically.
+
+**scores[*].confidence** — set "low" if evidence is thin or stale, "medium" \
+for adequate evidence, "high" for strong multi-source evidence within the \
+last 18 months.
+
+Use `notes` for caveats, source gaps, and any non-allowlisted sources cited.
 """
 
 
